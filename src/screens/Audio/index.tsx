@@ -11,14 +11,13 @@ import sounds from "../../model/SoundsData";
 
 const MusicPlayer = () => {
   const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null);
+  const [isPlaying, setIsPlaying] = useState<Boolean>(false);
+  const [currentMusicId, setCurrentMusicId] = useState(0);
 
   const audioUri = "http://webaudioapi.com/samples/audio-tag/chrono.mp3";
   const audioLocal = "../../assets/sounds/Sound1.mp3";
 
-  const [currentMusicId, setCurrentMusicId] = useState(0);
-
   useEffect(() => {
-    console.log(sounds.length);
     initMusic();
   }, []);
 
@@ -30,11 +29,15 @@ const MusicPlayer = () => {
     };
   }, [currentSound]);
 
+  useEffect(() => {
+    initMusic();
+  }, [currentMusicId]);
+
   const initMusic = async () => {
     console.log("Loading Sound");
 
     try {
-      let { sound } = await Audio.Sound.createAsync(sounds[0].url);
+      let { sound } = await Audio.Sound.createAsync(sounds[currentMusicId].url);
 
       setCurrentSound(sound);
     } catch {
@@ -43,8 +46,11 @@ const MusicPlayer = () => {
   };
 
   const nextSound = async () => {
-    setCurrentMusicId(
-      currentMusicId == sounds.length - 1 ? currentMusicId + 1 : 0
+    await currentSound?.unloadAsync();
+    FcSetIsPlaying();
+
+    await setCurrentMusicId(
+      currentMusicId == sounds.length - 1 ? 0 : currentMusicId + 1
     );
   };
 
@@ -54,28 +60,31 @@ const MusicPlayer = () => {
     if (!currentSound) await initMusic();
 
     await currentSound?.playAsync();
+
+    FcSetIsPlaying();
   };
 
   const handlePauseSound = async () => {
     await currentSound?.stopAsync();
+
+    FcSetIsPlaying();
+  };
+
+  const FcSetIsPlaying = async () => {
+    let status = await currentSound?.getStatusAsync();
+    if (status?.isLoaded) setIsPlaying(status.isPlaying);
+    else setIsPlaying(false);
   };
 
   return (
     <AudioContainer>
-      <MusicInfo />
+      <MusicInfo info={sounds[currentMusicId]} />
       <MusicControl
-        currentSound={currentSound}
+        isPlaying={isPlaying}
         handlePlaySound={() => handlePlaySound()}
         handlePauseSound={() => handlePauseSound()}
-        nextSound={nextSound}
+        nextSound={() => nextSound()}
       />
-
-      <TouchableOpacity onPress={() => handlePlaySound()}>
-        <Text>Play Audio</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => handlePauseSound()}>
-        <Text>Stop Audio</Text>
-      </TouchableOpacity>
     </AudioContainer>
   );
 };

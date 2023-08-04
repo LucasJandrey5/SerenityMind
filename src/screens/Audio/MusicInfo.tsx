@@ -3,7 +3,17 @@ import React from "react";
 
 import { MusicTitle, MusicSubtitle, AudioImage } from "./styles";
 
-const MusicInfo = () => {
+interface Props {
+  info: {
+    title: string;
+    artist: string;
+    artwork: any;
+    url: any;
+    id: number;
+  };
+}
+
+const MusicInfo: React.FC<Props> = ({ info }) => {
   return (
     <View>
       <AudioImage
@@ -11,8 +21,8 @@ const MusicInfo = () => {
         style={{ width: 200, height: 200 }}
       ></AudioImage>
 
-      <MusicTitle>Painting Forest</MusicTitle>
-      <MusicSubtitle>By: Painting with Passion</MusicSubtitle>
+      <MusicTitle>{info.title}</MusicTitle>
+      <MusicSubtitle>By: {info.artist}</MusicSubtitle>
     </View>
   );
 };
