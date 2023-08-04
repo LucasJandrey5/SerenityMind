@@ -4,14 +4,24 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Home from "../screens/Home";
 import Menu from "../screens/Menu";
-import Audio from "../screens/Audio";
+import MusicPlayer from "../screens/Audio";
+import Header from "../Components/Header/index";
 
 const Tab = createBottomTabNavigator();
 
 const Routes: React.FC = () => {
   return (
     <NavigationContainer>
+      <Header />
       <Tab.Navigator>
+        <Tab.Screen
+          name="audio"
+          component={MusicPlayer}
+          options={{
+            headerShown: false,
+          }}
+        />
+
         <Tab.Screen
           name="home"
           component={Home}
@@ -19,13 +29,7 @@ const Routes: React.FC = () => {
             headerShown: false,
           }}
         />
-        <Tab.Screen
-          name="audio"
-          component={Audio}
-          options={{
-            headerShown: false,
-          }}
-        />
+
         <Tab.Screen
           name="menu"
           component={Menu}
