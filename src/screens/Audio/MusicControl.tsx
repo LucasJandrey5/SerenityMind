@@ -13,21 +13,23 @@ import {
 } from "./styles";
 
 interface Props {
-  nextSound: () => void;
   handlePlaySound: () => void;
   handlePauseSound: () => void;
   isPlaying: Boolean;
+  nextSound: () => void;
+  previousSound: () => void;
 }
 
 const MusicControl: React.FC<Props> = ({
   isPlaying,
   nextSound,
+  previousSound,
   handlePlaySound,
   handlePauseSound,
 }) => {
   return (
     <MusicControlContainer>
-      <NextPreviusMusicButton rotate={180} onPress={() => {}}>
+      <NextPreviusMusicButton rotate={180} onPress={() => previousSound()}>
         <NextSvg width="25" height="25"></NextSvg>
       </NextPreviusMusicButton>
       {isPlaying && (

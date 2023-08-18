@@ -1,12 +1,24 @@
-import { View, Text } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import React from "react";
 
 import { HomeContainer } from "./styles";
+import MusicRow from "./MusicRow";
 
-const Home = () => {
+import sounds from "../../model/SoundsData";
+
+interface Props {
+  navigation: any;
+}
+
+const Home: React.FC<Props> = ({ navigation }) => {
   return (
     <HomeContainer>
-      <Text>Home</Text>
+      <FlatList
+        data={sounds}
+        renderItem={({ item }) => (
+          <MusicRow info={item} navigation={navigation} />
+        )}
+      />
     </HomeContainer>
   );
 };

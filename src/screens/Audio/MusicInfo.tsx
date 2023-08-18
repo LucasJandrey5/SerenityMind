@@ -1,7 +1,8 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { MusicTitle, MusicSubtitle, AudioImage } from "./styles";
+import sounds from "../../model/SoundsData";
 
 interface Props {
   info: {
@@ -14,11 +15,15 @@ interface Props {
 }
 
 const MusicInfo: React.FC<Props> = ({ info }) => {
+  if (info == undefined) {
+    info = sounds[0];
+  }
+
   return (
     <View>
       <AudioImage
-        source={require("../../assets/images/MusicImages/PaintingForest.png")}
-        style={{ width: 200, height: 200 }}
+        source={info.artwork}
+        style={{ width: 200, height: 200, borderRadius: 100 }}
       ></AudioImage>
 
       <MusicTitle>{info.title}</MusicTitle>
